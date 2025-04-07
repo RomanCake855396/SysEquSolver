@@ -6,37 +6,51 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLi
 from sympy import symbols, sympify, Eq, solve
 
 
-app = QApplication(sys.argv)
-window = QWidget()
-window.setGeometry(100, 100, 100, 100)
-layout = QVBoxLayout()
+class Window(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+        self.setWindowTitle('Solver')
+        self.setGeometry(200, 200, 200, 200)
+
+        self.__init__ui()
 
 
-def solv():
-    tmp_left, tmp_right = equiption.text().split('=')
-    left = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_left))
-    right = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_right))
-    x = symbols('x')
-    equ = Eq(left, right)
-    solution = solve(equ, x)
-    resault.setText(f'x = {solution[0]}') 
+    def __init__ui(self):
+        self.equation = QLineEdit(self)
+        self.equation.setPlaceholderText('Equiption')
+
+        self.solve_btn = QPushButton(self)
+        self.solve_btn.setText('Solve')
+        self.solve_btn.clicked.connect(self.solv)
+
+        self.resault = QLabel(self)
+        self.resault.setText('x = None')
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.equation)
+        self.layout.addWidget(self.solve_btn)
+        self.layout.addWidget(self.resault)
+
+        self.setLayout(self.layout)
 
 
+    def solv(self):
+        try:
+            tmp_left, tmp_right = self.equation.text().split('=')
+            left = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_left))
+            right = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_right))
+            equ = Eq(left, right)
+            x = symbols('x')
+            solution = solve(equ, x)
+            self.resault.setText(f'x = {solution[0]}')
+        except:
+            self.resault.setText('ERROR: Invalid equation')
 
-equiption = QLineEdit(window)
-equiption.setPlaceholderText('Equiption')
 
-solve_btn = QPushButton(window)
-solve_btn.setText('Solve')
-solve_btn.clicked.connect(solv)
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = Window()
 
-resault = QLabel(window)
-resault.setText('x = None')
-
-layout.addWidget(equiption)
-layout.addWidget(solve_btn)
-layout.addWidget(resault)
-
-window.setLayout(layout)
-window.show()
-sys.exit(app.exec_())
+    window.show()
+    sys.exit(app.exec_())
