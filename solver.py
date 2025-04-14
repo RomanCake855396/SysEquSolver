@@ -17,8 +17,14 @@ class Window(QWidget):
 
 
     def __init__ui(self):
-        self.equation = QLineEdit(self)
-        self.equation.setPlaceholderText('Equiption')
+        self.equation1 = QLineEdit(self)
+        self.equation1.setPlaceholderText('Equiption1')
+
+        self.equation2 = QLineEdit(self)
+        self.equation2.setPlaceholderText('Equiption2')
+        
+        self.equation3 = QLineEdit(self)
+        self.equation3.setPlaceholderText('Equiption3')
 
         self.solve_btn = QPushButton(self)
         self.solve_btn.setText('Solve')
@@ -28,7 +34,9 @@ class Window(QWidget):
         self.resault.setText('x = None')
 
         layout = QVBoxLayout()
-        layout.addWidget(self.equation)
+        layout.addWidget(self.equation1)
+        layout.addWidget(self.equation2)
+        layout.addWidget(self.equation3)
         layout.addWidget(self.solve_btn)
         layout.addWidget(self.resault)
 
@@ -37,9 +45,8 @@ class Window(QWidget):
 
     def input(self, text):
         try:
-            tmp_left, tmp_right = text
+            tmp_left, tmp_right = text.split('=')
         except ValueError:
-            self.resault.setText('ERROR: Invalid syntax')
             return
 
         try:
@@ -47,21 +54,46 @@ class Window(QWidget):
             right = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_right))
             equation = Eq(left, right)
         except:
-            self.resault.setText('ERROR: Invalid equation')
             return
 
         return equation
 
 
+    def equations(self):
+        equations = []
+        text1 = self.equation1.text()
+        if len(text1):
+            equation1 = self.input(text1)
+            equations.append(equation1)
+        text2 = self.equation2.text()
+        if len(text2):
+            equation2 = self.input(text2)
+            equations.append(equation2)
+        text3 = self.equation3.text()
+        if len(text3):
+            equation3 = self.input(text3)
+            equations.append(equation3)
+        return equations
+
+
     def solve(self):
-        equation = self.input(self.equation.text().split('='))
-        x = symbols('x')
         try:
-            solution = solve(equation, x)
+            equations = self.equations()
+            if len(equations) == 1:
+                x = symbols('x')
+                solution = solve(equations[0], x)
+                self.resault.setText(f'x = {solution[0]}')
+            elif len(equations) == 2:
+                x, y = symbols('x y')
+                solution = solve(equations, (x, y))
+                self.resault.setText(f'x = {solution[x]}; y = {solution[y]}')
+            elif len(equations) == 3:
+                x, y, z = symbols('x y z')
+                solution = solve(equations, (x, y, z))
+                self.resault.setText(f'x = {solution[x]}; y = {solution[y]}; z = {solution[z]}')
+
         except:
             return
-        
-        self.resault.setText(f'x = {solution[0]}')
 
 
 if __name__ == '__main__':
