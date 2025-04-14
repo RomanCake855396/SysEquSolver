@@ -22,22 +22,27 @@ class Window(QWidget):
 
         self.solve_btn = QPushButton(self)
         self.solve_btn.setText('Solve')
-        self.solve_btn.clicked.connect(self.solv)
+        self.solve_btn.clicked.connect(self.solve)
 
         self.resault = QLabel(self)
         self.resault.setText('x = None')
 
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.equation)
-        self.layout.addWidget(self.solve_btn)
-        self.layout.addWidget(self.resault)
+        layout = QVBoxLayout()
+        layout.addWidget(self.equation)
+        layout.addWidget(self.solve_btn)
+        layout.addWidget(self.resault)
 
-        self.setLayout(self.layout)
+        self.setLayout(layout)
 
 
-    def solv(self):
+    def solve(self):
         try:
             tmp_left, tmp_right = self.equation.text().split('=')
+        except ValueError:
+            self.resault.setText('ERROR: Invalid syntax')
+            return
+
+        try:
             left = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_left))
             right = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_right))
             equ = Eq(left, right)
@@ -53,4 +58,4 @@ if __name__ == '__main__':
     window = Window()
 
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
