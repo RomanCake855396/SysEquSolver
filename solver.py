@@ -1,9 +1,9 @@
 import sys
 import re
 
-
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLineEdit, QLabel
 from sympy import symbols, sympify, Eq, solve
+
 
 
 class Window(QWidget):
@@ -30,8 +30,8 @@ class Window(QWidget):
         self.solve_btn.setText('Solve')
         self.solve_btn.clicked.connect(self.solve)
 
-        self.resault = QLabel(self)
-        self.resault.setText('x = None')
+        self.result = QLabel(self)
+        self.result.setText('x = None')
 
         layout = QVBoxLayout()
         layout.addWidget(self.equation1)
@@ -86,11 +86,12 @@ class Window(QWidget):
                 case 3:
                     solution = solve(equations[0:2], (x, y, z))
                     self.result.setText(f'x = {solution[x]}; y = {solution[y]}; z = {solution[z]}')
-                case 0:
+                case _:
                     self.result.setText('ERROR: Empty input!')
 
         except:
             self.result.setText('ERROR: Invalid syntax!')
+
 
 
 if __name__ == '__main__':
