@@ -46,10 +46,6 @@ class Window(QWidget):
     def input(self, text):
         try:
             tmp_left, tmp_right = text.split('=')
-        except ValueError:
-            return
-
-        try:
             left = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_left))
             right = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_right))
             equation = Eq(left, right)
@@ -79,20 +75,21 @@ class Window(QWidget):
     def solve(self):
         try:
             equations = self.equations()
+            x, y, z = symbols('x y z')
             if len(equations) == 1:
-                x = symbols('x')
                 solution = solve(equations[0], x)
                 self.resault.setText(f'x = {solution[0]}')
             elif len(equations) == 2:
-                x, y = symbols('x y')
-                solution = solve(equations, (x, y))
+                solution = solve(equations[0:1], (x, y))
                 self.resault.setText(f'x = {solution[x]}; y = {solution[y]}')
             elif len(equations) == 3:
-                x, y, z = symbols('x y z')
-                solution = solve(equations, (x, y, z))
+                solution = solve(equations[0:2], (x, y, z))
                 self.resault.setText(f'x = {solution[x]}; y = {solution[y]}; z = {solution[z]}')
+            elif len(equations) == 0:
+                self.resault.setText('ERROR: Empty input!')
 
         except:
+            self.resault.setText('ERROR: Invalid syntax!')
             return
 
 
