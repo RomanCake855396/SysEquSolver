@@ -35,9 +35,9 @@ class Window(QWidget):
         self.setLayout(layout)
 
 
-    def solve(self):
+    def input(self, text):
         try:
-            tmp_left, tmp_right = self.equation.text().split('=')
+            tmp_left, tmp_right = text
         except ValueError:
             self.resault.setText('ERROR: Invalid syntax')
             return
@@ -45,12 +45,23 @@ class Window(QWidget):
         try:
             left = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_left))
             right = sympify(re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', tmp_right))
-            equ = Eq(left, right)
-            x = symbols('x')
-            solution = solve(equ, x)
-            self.resault.setText(f'x = {solution[0]}')
+            equation = Eq(left, right)
         except:
             self.resault.setText('ERROR: Invalid equation')
+            return
+
+        return equation
+
+
+    def solve(self):
+        equation = self.input(self.equation.text().split('='))
+        x = symbols('x')
+        try:
+            solution = solve(equation, x)
+        except:
+            return
+        
+        self.resault.setText(f'x = {solution[0]}')
 
 
 if __name__ == '__main__':
