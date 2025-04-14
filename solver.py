@@ -18,13 +18,13 @@ class Window(QWidget):
 
     def __init__ui(self):
         self.equation1 = QLineEdit(self)
-        self.equation1.setPlaceholderText('Equiption1')
+        self.equation1.setPlaceholderText('Equation1')
 
         self.equation2 = QLineEdit(self)
-        self.equation2.setPlaceholderText('Equiption2')
+        self.equation2.setPlaceholderText('Equation2')
         
         self.equation3 = QLineEdit(self)
-        self.equation3.setPlaceholderText('Equiption3')
+        self.equation3.setPlaceholderText('Equation3')
 
         self.solve_btn = QPushButton(self)
         self.solve_btn.setText('Solve')
@@ -38,7 +38,7 @@ class Window(QWidget):
         layout.addWidget(self.equation2)
         layout.addWidget(self.equation3)
         layout.addWidget(self.solve_btn)
-        layout.addWidget(self.resault)
+        layout.addWidget(self.result)
 
         self.setLayout(layout)
 
@@ -76,21 +76,21 @@ class Window(QWidget):
         try:
             equations = self.equations()
             x, y, z = symbols('x y z')
-            if len(equations) == 1:
-                solution = solve(equations[0], x)
-                self.resault.setText(f'x = {solution[0]}')
-            elif len(equations) == 2:
-                solution = solve(equations[0:1], (x, y))
-                self.resault.setText(f'x = {solution[x]}; y = {solution[y]}')
-            elif len(equations) == 3:
-                solution = solve(equations[0:2], (x, y, z))
-                self.resault.setText(f'x = {solution[x]}; y = {solution[y]}; z = {solution[z]}')
-            elif len(equations) == 0:
-                self.resault.setText('ERROR: Empty input!')
+            match len(equations):
+                case 1:
+                    solution = solve(equations[0], x)
+                    self.result.setText(f'x = {solution[0]}')
+                case 2:
+                    solution = solve(equations[0:1], (x, y))
+                    self.result.setText(f'x = {solution[x]}; y = {solution[y]}')
+                case 3:
+                    solution = solve(equations[0:2], (x, y, z))
+                    self.result.setText(f'x = {solution[x]}; y = {solution[y]}; z = {solution[z]}')
+                case 0:
+                    self.result.setText('ERROR: Empty input!')
 
         except:
-            self.resault.setText('ERROR: Invalid syntax!')
-            return
+            self.result.setText('ERROR: Invalid syntax!')
 
 
 if __name__ == '__main__':
