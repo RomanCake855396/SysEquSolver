@@ -110,7 +110,7 @@ class Window(QWidget):
                     self.result.setText('ERROR: Empty input!')  # No input provided
 
         except:
-            self.result.setText('ERROR: Invalid syntax!') # Handle any parsing/solving errors
+            self.result.setText('ERROR: No found results or invalid syntax!') # Handle any parsing/solving errors
 
 
 
