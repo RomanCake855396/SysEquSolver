@@ -12,7 +12,7 @@ class Window(QWidget):
         
         # Set window title and size
         self.setWindowTitle('Solver')
-        self.setGeometry(200, 200, 200, 200)
+        self.setFixedSize(300, 200)
 
         self.__init__ui()   # Initialize UI elements
 
@@ -101,10 +101,10 @@ class Window(QWidget):
                     solution = solve(equations[0], x)
                     self.result.setText(f'x = {solution[0]}')
                 case 2:
-                    solution = solve(equations[0:1], (x, y))
+                    solution = solve(equations, (x, y))
                     self.result.setText(f'x = {solution[x]}; y = {solution[y]}')
                 case 3:
-                    solution = solve(equations[0:2], (x, y, z))
+                    solution = solve(equations, (x, y, z))
                     self.result.setText(f'x = {solution[x]}; y = {solution[y]}; z = {solution[z]}')
                 case _:
                     self.result.setText('ERROR: Empty input!')  # No input provided
